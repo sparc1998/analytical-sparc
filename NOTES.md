@@ -5,6 +5,9 @@
 ### Blog
 
 - You can add a title and description by editing `blog_name` and `blog_description` in `_config.yml`.
+- The website colors can be modified in `_sass/_custom.scss`.
+- To add new posts, create a new file in `_posts/` with the format `YYYY-MM-DD-title.md`.
+- To add new news, create a new file in `_news/` with the format `YYYY-MM-DD-title.md`.
 
 ## Software
 
@@ -39,8 +42,8 @@
 
 ## Testing
 
-- Launch Docker app.
-- `docker compose up`
+- Launch the Docker app.
+- `make up` (or `docker compose up`)
 
 ## Migrating to a fresh al-folio
 
