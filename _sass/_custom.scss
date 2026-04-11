@@ -1,0 +1,26 @@
+@use "sass:color";
+
+// Custom variables
+$brand-blue: rgb(190, 109, 17);
+$brand-blue-light: color.adjust($brand-blue, $lightness: 40%);
+
+// Custom overrides for al-folio
+
+.profile {
+
+  // Allow profile image to take full width of its column
+  @media (min-width: 576px) {
+    width: 100%;
+  }
+}
+
+// Link and theme color customizations
+:root {
+  --global-theme-color: #{$brand-blue};
+  --global-hover-color: #{$brand-blue};
+}
+
+html[data-theme="dark"] {
+  --global-theme-color: #{$brand-blue-light};
+  --global-hover-color: #{$brand-blue-light};
+}
