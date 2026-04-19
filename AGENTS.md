@@ -1,6 +1,11 @@
 # Agent Guidelines for al-folio
 
+> [!IMPORTANT]
+> This site uses custom rules for the **Analytical Sparc** blog. 
+> Before starting any work, please read **[ANALYTICAL_SPARC_AGENTS.md](ANALYTICAL_SPARC_AGENTS.md)**.
+
 A simple, clean, and responsive Jekyll theme for academics.
+
 
 ## Quick Links by Role
 

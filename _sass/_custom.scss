@@ -1,8 +1,10 @@
-@use "sass:color";
-
 // Custom variables
-$brand-blue: rgb(190, 109, 17);
-$brand-blue-light: color.adjust($brand-blue, $lightness: 40%);
+$light-theme-color: #d46b09;
+$dark-theme-color: rgb(247, 208, 164);
+$table-header-light-bg: #E6E6E6;
+$table-header-dark-bg: rgb(44, 50, 55);
+$base-font-size: 1.1rem;
+
 
 // Custom overrides for al-folio
 
@@ -16,11 +18,184 @@ $brand-blue-light: color.adjust($brand-blue, $lightness: 40%);
 
 // Link and theme color customizations
 :root {
-  --global-theme-color: #{$brand-blue};
-  --global-hover-color: #{$brand-blue};
+  --global-theme-color: #{$light-theme-color};
+  --global-hover-color: #{$light-theme-color};
+  --table-header-bg: #{$table-header-light-bg};
 }
 
 html[data-theme="dark"] {
-  --global-theme-color: #{$brand-blue-light};
-  --global-hover-color: #{$brand-blue-light};
+  --global-theme-color: #{$dark-theme-color};
+  --global-hover-color: #{$dark-theme-color};
+  --table-header-bg: #{$table-header-dark-bg};
+}
+
+// Global typography
+body {
+  font-size: $base-font-size;
+}
+
+// Post heading colors
+.post h1,
+.post h2,
+.post h3,
+.post h4,
+.post h5,
+.post h6 {
+  color: $light-theme-color;
+}
+
+html[data-theme="dark"] {
+
+  .post h1,
+  .post h2,
+  .post h3,
+  .post h4,
+  .post h5,
+  .post h6 {
+    color: $dark-theme-color;
+  }
+}
+
+
+// Footnotes styling
+.footnotes {
+  border-top: 1px solid var(--global-divider-color);
+  margin-top: 3rem;
+  padding-top: 1rem;
+  font-size: 0.9rem;
+
+  ol {
+    padding-left: 1.5rem;
+  }
+}
+
+// Table styling and sortability
+.post table {
+  margin-left: 0 !important;
+  margin-right: auto !important;
+  width: fit-content !important;
+  max-width: 100%;
+}
+
+/* Force the DataTables container to the left */
+.dataTables_wrapper {
+  margin-left: 0 !important;
+  margin-right: auto !important;
+}
+
+// Ensure DataTables controls are readable in dark mode
+html[data-theme="dark"] {
+  .dataTables_wrapper {
+
+    .dataTables_length,
+    .dataTables_filter,
+    .dataTables_info,
+    .dataTables_processing,
+    .dataTables_paginate {
+      color: var(--global-text-color) !important;
+    }
+
+    .dataTables_paginate .paginate_button {
+      color: var(--global-text-color) !important;
+
+      &.disabled {
+        color: var(--global-text-color-light) !important;
+      }
+    }
+  }
+}
+
+// Table header background color — covers both plain tables and DataTables (scrollY or not)
+.post #markdown-content table thead th,
+.post #markdown-content .dataTables_wrapper thead th {
+  background-color: $table-header-light-bg !important;
+}
+
+html[data-theme="dark"] {
+
+  .post #markdown-content table thead th,
+  .post #markdown-content .dataTables_wrapper thead th {
+    background-color: $table-header-dark-bg !important;
+  }
+}
+
+// DataTables native scrollY creates a .dataTables_scrollHead container above the body.
+// Match its background so there's no gap/bleed around the th cells.
+.post #markdown-content .dataTables_scrollHead {
+  background-color: $table-header-light-bg;
+  overflow: hidden !important;
+}
+
+html[data-theme="dark"] {
+  .post #markdown-content .dataTables_scrollHead {
+    background-color: $table-header-dark-bg;
+  }
+}
+
+// DataTables with scrollX stamps width:100% on scrollHead, scrollBody, and the
+// outer wrapper divs, making the table stretch to fill the full post content width
+// even when only a few columns are visible. Override all of those to fit-content
+// so the table shrinks to its actual column content.
+// Note: do NOT override .dataTables_scrollHeadInner — DataTables sets that to the
+// correct pixel content width; overriding it with auto would expand it to 100% (wrong).
+.post #markdown-content .dataTables_wrapper,
+.post #markdown-content .dataTables_scroll,
+.post #markdown-content .dataTables_scrollHead,
+.post #markdown-content .dataTables_scrollBody {
+  width: fit-content !important;
+  max-width: 100%;
+}
+
+// The inner tables use auto so they size to their <col> widths rather than
+// trying to fill the (now correctly-sized) scroll containers.
+.post #markdown-content .dataTables_scrollHeadInner table,
+.post #markdown-content .dataTables_scrollBody table {
+  width: auto !important;
+}
+
+
+// Column toggle button styling
+.dt-col-toggle-btn+.dt-col-toggle-btn {
+  margin-left: 0.5rem;
+}
+
+.dt-col-toggle-btn {
+  background-color: transparent;
+  border: 1px solid var(--global-theme-color);
+  color: var(--global-theme-color);
+  border-radius: 4px;
+  padding: 2px 10px;
+  font-size: 0.8rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--global-theme-color);
+    color: var(--global-bg-color);
+  }
+
+  &.active {
+    background-color: var(--global-theme-color);
+    color: var(--global-bg-color);
+  }
+}
+
+// Force alignment for table headers
+.post table thead th {
+  text-align: left !important;
+}
+
+// Respect Markdown alignment for data cells (td)
+.post table td {
+  text-align: inherit;
+}
+
+// Multi-column list layout
+@for $i from 2 through 4 {
+
+  .list-cols-#{$i} ul,
+  .list-cols-#{$i} ol {
+    column-count: $i;
+    column-gap: 2rem;
+    list-style-position: inside;
+  }
 }

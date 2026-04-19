@@ -1,0 +1,105 @@
+{% if page.enable_datatables %}
+  {% if include.type == 'head' %}
+    <!-- DataTables CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ site.third_party_libraries.datatables.url.css }}"
+      integrity="{{ site.third_party_libraries.datatables.integrity.css }}"
+      crossorigin="anonymous"
+    >
+  {% elsif include.type == 'scripts' %}
+    <!-- DataTables JS -->
+    <script
+      src="{{ site.third_party_libraries.datatables.url.js }}"
+      integrity="{{ site.third_party_libraries.datatables.integrity.js }}"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      (function ($) {
+        $(document).ready(function () {
+          // Find all tables in post content
+          $(".post #markdown-content table").each(function () {
+            var $table = $(this);
+            var $parent = $table.parent("[data-dt-max-height], [data-dt-font-size], [data-dt-col-toggle]");
+            var scrollY = $parent.data("dt-max-height") || "{{ page.dt_max_height }}";
+            var fontSize = $parent.data("dt-font-size") || "{{ page.dt_font_size }}";
+            var colToggle = $parent.data("dt-col-toggle") || "";
+            // Apply bootstrap classes if not already present
+            if (!$table.hasClass("table")) {
+              $table.addClass("table table-bordered table-hover w-auto");
+            }
+            if (fontSize) {
+              $table.find("td, th").css("font-size", fontSize);
+            }
+            // Wrap in table-responsive if not already wrapped
+            if (!$table.parent().hasClass("table-responsive")) {
+              $table.wrap("<div class='table-responsive'></div>");
+            }
+            // Build DataTables config. Use native scrollY so DataTables physically
+            // splits thead into a separate non-scrolling container — the only reliable
+            // way to get a fixed header when the table is inside a overflow:auto div.
+            var dtConfig = {
+              paging: false,
+              searching: false,
+              info: false,
+              order: [],
+              initComplete: function () {
+                var api = this.api();
+                var container = api.table().container();
+                if (colToggle) {
+                  var $btnGroup = $('<div class="mb-2"></div>');
+                  colToggle.toString().split(",").forEach(function (group) {
+                    var parts = group.trim().split(":");
+                    var range = parts[0].trim();
+                    var label = parts[1] ? parts[1].trim() : "Toggle " + range;
+                    var initialState = parts[2] ? parts[2].trim().toLowerCase() : "show";
+                    var cols = [];
+                    if (range.indexOf("-") !== -1) {
+                      var bounds = range.split("-");
+                      for (var i = parseInt(bounds[0]); i <= parseInt(bounds[1]); i++) cols.push(i);
+                    } else {
+                      cols = range.split(";").map(Number);
+                    }
+                    var visible = initialState !== "hide";
+                    if (!visible) {
+                      cols.forEach(function (c) { api.column(c).visible(false); });
+                    }
+                    var $btn = $('<button class="dt-col-toggle-btn">Show ' + label + " Cols</button>");
+                    if (visible) $btn.addClass("active");
+                    $btn.on("click", function () {
+                      visible = !visible;
+                      cols.forEach(function (c) { api.column(c).visible(visible); });
+                      $(this).toggleClass("active");
+                      // Clear DataTables' inline pixel widths on both scroll tables so the
+                      // browser reflows them to natural content width first. Without this,
+                      // columns.adjust() redistributes the old (wider) container width among
+                      // the remaining columns, inflating whichever column has the longest header.
+                      var $w = $(api.table().container());
+                      $w.find(".dataTables_scrollHeadInner table, .dataTables_scrollBody table").css("width", "");
+                      api.columns.adjust().draw();
+                    });
+                    $btnGroup.append($btn);
+                  });
+                  $(container).before($btnGroup);
+                }
+              },
+            };
+            // Initialize DataTable sorting functionality
+            if (!$.fn.DataTable.isDataTable(this)) {
+              if (scrollY) {
+                // Native DataTables scrollY splits thead into its own non-scrolling
+                // div above the body, giving a true sticky header without fighting
+                // position:sticky through multiple overflow ancestors.
+                dtConfig.scrollY = scrollY;
+                dtConfig.scrollX = true;
+                dtConfig.scrollCollapse = true;
+              }
+              $(this).DataTable(dtConfig);
+            }
+          });
+        });
+      })(jQuery);
+    </script>
+  {% endif %}
+{% endif %}

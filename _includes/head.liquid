@@ -196,6 +196,10 @@
   <link defer rel="stylesheet" type="text/css" href="{{ '/assets/css/tikzjax.min.css' | relative_url | bust_file_cache }}">
 {% endif %}
 
+{% include datatables.liquid type="head" %}
+
+
+
 {% if site.enable_cookie_consent %}
   <!-- Cookie Consent -->
   <link
