@@ -16,15 +16,15 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/analytical-sparc/blog/";
           },
-        },{id: "post-welcome-to-analytical-sparc",
+        },{id: "post-historical-analysis-of-ncaam-tournament-results",
         
-          title: "Welcome to Analytical Sparc!",
+          title: "Historical Analysis of NCAAM Tournament Results",
         
-        description: "A quick introduction to the new sports blog.",
+        description: "A look at historical NCAAM tournament results.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/analytical-sparc/blog/2026/welcome/";
+            window.location.href = "/analytical-sparc/blog/2026/ncaam-tournament-history/";
           
         },
       },{id: "news-i-am-excited-to-announce-the-launch-of-my-new-blog-analytical-sparc-where-i-ll-be-sharing-in-depth-sports-analysis-and-insights-check-out-the-blog-for-more",

@@ -1,4 +1,6 @@
-PRETTIER = /usr/local/bin/prettier
+FORMAT_FILES = _posts/*.md \
+               .agent/skills/*.md \
+               ANALYTICAL_SPARC_AGENTS.md
 BUNDLE_FILES = _config.yml \
                assets/img/logo.png \
                _posts \
@@ -6,7 +8,14 @@ BUNDLE_FILES = _config.yml \
                _pages \
                _layouts/about_custom.liquid \
                _sass/_custom.scss \
-               assets/css/main.scss
+               assets/css/main.scss \
+               _includes/datatables.liquid \
+               _includes/head.liquid \
+               _includes/scripts.liquid \
+               Makefile \
+               NOTES.md \
+               AGENTS.md \
+               ANALYTICAL_SPARC_AGENTS.md
 
 .DEFAULT_GOAL := help
 
@@ -18,8 +27,8 @@ help: ## Show this help message
 up: ## Start the local development server via Docker
 	docker compose up
 
-fix: ## Format all Markdown files using Prettier
-	$(PRETTIER) --write "**/*.md"
+fix: ## Format Markdown files using Prettier
+	npx prettier $(FORMAT_FILES) --write
 
 bundle: ## Create a compressed archive of custom site files
 	tar -czf analytical-sparc-custom.tgz $(BUNDLE_FILES)
