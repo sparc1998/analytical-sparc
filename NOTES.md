@@ -176,3 +176,7 @@ If you want to start over with a brand new `al-folio` instance and port your Ana
    ```
 
 3. **Finalize**: Your customizations are now in place. Run `make up` to verify.
+
+## TODO
+
+- Make light/dark mode work, in a canonical way, without having to hit reload.
